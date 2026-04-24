@@ -16,13 +16,13 @@ fi
 
 echo "Aplicando Secret '${SECRET_NAME}' no namespace '${NAMESPACE}'..."
 
-kubectl get namespace "${NAMESPACE}" >/dev/null 2>&1 || kubectl create namespace "${NAMESPACE}"
+k3s kubectl get namespace "${NAMESPACE}" >/dev/null 2>&1 || k3s kubectl create namespace "${NAMESPACE}"
 
-kubectl -n "${NAMESPACE}" create secret generic "${SECRET_NAME}" \
+k3s kubectl -n "${NAMESPACE}" create secret generic "${SECRET_NAME}" \
   --from-literal=POSTGRES_USER="${POSTGRES_USER}" \
   --from-literal=POSTGRES_PASSWORD="${POSTGRES_PASSWORD}" \
   --from-literal=POSTGRES_DB="${POSTGRES_DB}" \
-  --dry-run=client -o yaml | kubectl apply -f -
+  --dry-run=client -o yaml | k3s kubectl apply -f -
 
 echo "Secret aplicado com sucesso."
-kubectl -n "${NAMESPACE}" get secret "${SECRET_NAME}" -o name
+k3s kubectl -n "${NAMESPACE}" get secret "${SECRET_NAME}" -o name
