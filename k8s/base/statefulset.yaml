@@ -23,6 +23,8 @@ spec:
             - containerPort: 5432
               name: postgres
           envFrom:
+            - configMapRef:
+                name: postgresql-config
             - secretRef:
                 name: postgresql-auth
           volumeMounts:
