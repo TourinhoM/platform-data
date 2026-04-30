@@ -41,15 +41,23 @@ spec:
             - name: postgresql-data
               mountPath: /var/lib/postgresql/data
           livenessProbe:
-            tcpSocket:
-              port: postgres
-            initialDelaySeconds: 20
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - exec pg_isready -U "$POSTGRES_USER" -d "$POSTGRES_DB"
+            initialDelaySeconds: 30
             periodSeconds: 10
+            timeoutSeconds: 5
           readinessProbe:
-            tcpSocket:
-              port: postgres
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - exec pg_isready -U "$POSTGRES_USER" -d "$POSTGRES_DB"
             initialDelaySeconds: 10
             periodSeconds: 10
+            timeoutSeconds: 5
           resources:
             requests:
               cpu: 100m
