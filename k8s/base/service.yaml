@@ -5,10 +5,10 @@ metadata:
   labels:
     app.kubernetes.io/name: postgresql
 spec:
+  clusterIP: None
   selector:
     app.kubernetes.io/name: postgresql
   ports:
     - name: postgres
       port: 5432
       targetPort: 5432
-  type: ClusterIP
