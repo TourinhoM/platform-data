@@ -6,3 +6,11 @@ resources:
   - externalsecret-postgresql.yaml
   - service.yaml
   - statefulset.yaml
+
+labels:
+  - pairs:
+      app.kubernetes.io/component: database
+      app.kubernetes.io/part-of: data
+      app.kubernetes.io/managed-by: argocd
+    includeSelectors: false
+    includeTemplates: true
