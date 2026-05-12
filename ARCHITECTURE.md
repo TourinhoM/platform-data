@@ -123,6 +123,24 @@ explícito.
 revela superuser do Postgres. Em produção, cada app teria role/DB
 próprio com GRANT limitado.
 
+### Observabilidade via sidecar `postgres_exporter` com superuser
+
+**Escolha:** sidecar `quay.io/prometheuscommunity/postgres-exporter` no
+mesmo Pod do Postgres, conectando via `localhost:5432`. Auth reusa a
+superuser credential. Service expõe porta `metrics:9187`;
+`ServiceMonitor` com label `release: monitoring` faz discovery via
+kube-prometheus-stack.
+
+**Alternativa:** role dedicada `postgres_exporter` com `pg_monitor`
+(built-in least-privilege pra monitoring, Postgres 10+). Bootstrap via
+Job/hook idempotente pós-deploy.
+
+**Por quê:** Postgres em container já é fora-de-escopo prod (banner no
+topo deste doc). O objetivo aqui é demonstrar o pattern de
+observabilidade (sidecar + ServiceMonitor + scraping), não
+least-privilege auth de DB. Em prod o caminho é DB gerenciado ou
+Operator que declara users.
+
 ### Storage class default do k3s (`local-path`)
 
 **Escolha:** PVC sem `storageClassName` — usa o default do k3s

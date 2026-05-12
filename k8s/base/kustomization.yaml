@@ -6,6 +6,7 @@ resources:
   - externalsecret-postgresql.yaml
   - service.yaml
   - statefulset.yaml
+  - servicemonitor-postgresql.yaml
 
 labels:
   - pairs:
