@@ -31,7 +31,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: postgresql-auth
-                  key: POSTGRES_PASSWORD
+                  key: GRAFANA_PASSWORD
           command:
             - /bin/sh
             - -c
