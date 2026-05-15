@@ -1,0 +1,55 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-grafana-db
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+spec:
+  ttlSecondsAfterFinished: 300
+  template:
+    spec:
+      automountServiceAccountToken: false
+      restartPolicy: OnFailure
+      containers:
+        - name: psql
+          image: postgres:16
+          imagePullPolicy: Always
+          env:
+            - name: PGHOST
+              value: postgresql
+            - name: PGPORT
+              value: "5432"
+            - name: PGUSER
+              value: postgres
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-auth
+                  key: POSTGRES_PASSWORD
+            - name: GRAFANA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-auth
+                  key: POSTGRES_PASSWORD
+          command:
+            - /bin/sh
+            - -c
+            - |
+              psql -d postgres -v "grafana_pw=${GRAFANA_PASSWORD}" <<'EOF'
+                DO $$
+                BEGIN
+                  IF NOT EXISTS (
+                    SELECT FROM pg_catalog.pg_roles WHERE rolname = 'grafana'
+                  ) THEN
+                    CREATE USER grafana WITH PASSWORD :'grafana_pw';
+                  END IF;
+                END $$;
+
+                SELECT 'CREATE DATABASE grafana OWNER grafana'
+                WHERE NOT EXISTS (
+                  SELECT FROM pg_database WHERE datname = 'grafana'
+                )\gexec
+
+                GRANT ALL PRIVILEGES ON DATABASE grafana TO grafana;
+              EOF
