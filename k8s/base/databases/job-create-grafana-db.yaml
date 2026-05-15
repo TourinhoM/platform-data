@@ -43,6 +43,8 @@ spec:
                     SELECT FROM pg_catalog.pg_roles WHERE rolname = 'grafana'
                   ) THEN
                     CREATE USER grafana WITH PASSWORD :'grafana_pw';
+                  ELSE
+                    ALTER USER grafana WITH PASSWORD :'grafana_pw';
                   END IF;
                 END $$;
 
