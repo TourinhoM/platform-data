@@ -18,9 +18,6 @@ spec:
       # Postgres nao interage com k8s API server — least-privilege por design.
       automountServiceAccountToken: false
       securityContext:
-        runAsNonRoot: true
-        runAsUser: 999
-        runAsGroup: 999
         fsGroup: 999
       containers:
         - name: postgresql

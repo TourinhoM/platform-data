@@ -14,3 +14,9 @@ checks:
 
   # --- Decisoes conscientes ---
   metadataAndInstanceMismatched: ignore # convencao app.kubernetes.io/instance
+
+  # A imagem oficial postgres:16 inicia como root para configurar o PGDATA
+  # e depois usa gosu para dropar para uid 999. O processo final nao tem
+  # capabilities (drop: ALL no container-level). Trocar para imagem non-root
+  # (ex: Bitnami) eliminaria essa excecao.
+  runAsRootAllowed: ignore
