@@ -17,8 +17,6 @@ spec:
     spec:
       # Postgres nao interage com k8s API server — least-privilege por design.
       automountServiceAccountToken: false
-      securityContext:
-        fsGroup: 999
       containers:
         - name: postgresql
           image: postgres:16
@@ -29,6 +27,8 @@ spec:
             capabilities:
               drop:
                 - ALL
+              add:
+                - CHOWN
           ports:
             - containerPort: 5432
               name: postgres
