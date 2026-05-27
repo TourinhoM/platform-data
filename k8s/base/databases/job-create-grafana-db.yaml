@@ -89,22 +89,12 @@ spec:
             - /bin/sh
             - -c
             - |
-              psql -d postgres -v "grafana_pw=${GRAFANA_PASSWORD}" <<'EOF'
-                DO $$
-                BEGIN
-                  IF NOT EXISTS (
-                    SELECT FROM pg_catalog.pg_roles WHERE rolname = 'grafana'
-                  ) THEN
-                    CREATE USER grafana WITH PASSWORD :'grafana_pw';
-                  ELSE
-                    ALTER USER grafana WITH PASSWORD :'grafana_pw';
-                  END IF;
-                END $$;
-
+              psql -v ON_ERROR_STOP=1 -d postgres -v "grafana_pw=${GRAFANA_PASSWORD}" <<'EOF'
+                CREATE ROLE IF NOT EXISTS grafana WITH LOGIN;
+                ALTER ROLE grafana WITH PASSWORD :'grafana_pw';
                 SELECT 'CREATE DATABASE grafana OWNER grafana'
                 WHERE NOT EXISTS (
                   SELECT FROM pg_database WHERE datname = 'grafana'
                 )\gexec
-
                 GRANT ALL PRIVILEGES ON DATABASE grafana TO grafana;
               EOF
