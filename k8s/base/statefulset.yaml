@@ -29,6 +29,7 @@ spec:
                 - ALL
               add:
                 - CHOWN
+                - FOWNER
           ports:
             - containerPort: 5432
               name: postgres
