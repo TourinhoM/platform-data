@@ -24,12 +24,6 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
-            capabilities:
-              drop:
-                - ALL
-              add:
-                - CHOWN
-                - FOWNER
           ports:
             - containerPort: 5432
               name: postgres
