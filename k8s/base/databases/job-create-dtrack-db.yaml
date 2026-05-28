@@ -91,7 +91,7 @@ spec:
             - |
               psql -v ON_ERROR_STOP=1 -d postgres -v "dtrack_pw=${DTRACK_PASSWORD}" <<'EOF'
                 SET "dtrack.pw" = :'dtrack_pw';
-                DO $$
+                DO $body$
                 DECLARE pw TEXT := current_setting('dtrack.pw');
                 BEGIN
                   IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'dtrack') THEN
@@ -99,7 +99,7 @@ spec:
                   ELSE
                     EXECUTE format('ALTER USER dtrack WITH PASSWORD %L', pw);
                   END IF;
-                END $$;
+                END $body$;
                 SELECT 'CREATE DATABASE dtrack OWNER dtrack'
                 WHERE NOT EXISTS (
                   SELECT FROM pg_database WHERE datname = 'dtrack'

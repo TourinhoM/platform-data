@@ -91,7 +91,7 @@ spec:
             - |
               psql -v ON_ERROR_STOP=1 -d postgres -v "grafana_pw=${GRAFANA_PASSWORD}" <<'EOF'
                 SET "grafana.pw" = :'grafana_pw';
-                DO $$
+                DO $body$
                 DECLARE pw TEXT := current_setting('grafana.pw');
                 BEGIN
                   IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'grafana') THEN
@@ -99,7 +99,7 @@ spec:
                   ELSE
                     EXECUTE format('ALTER USER grafana WITH PASSWORD %L', pw);
                   END IF;
-                END $$;
+                END $body$;
                 SELECT 'CREATE DATABASE grafana OWNER grafana'
                 WHERE NOT EXISTS (
                   SELECT FROM pg_database WHERE datname = 'grafana'
