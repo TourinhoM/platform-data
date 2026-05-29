@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - job-create-grafana-db.yaml
   - job-create-dtrack-db.yaml
+  - job-create-backstage-db.yaml
