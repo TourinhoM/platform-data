@@ -105,4 +105,5 @@ spec:
                   SELECT FROM pg_database WHERE datname = 'backstage'
                 )\gexec
                 GRANT ALL PRIVILEGES ON DATABASE backstage TO backstage;
+                ALTER USER backstage WITH CREATEDB;
               EOF
