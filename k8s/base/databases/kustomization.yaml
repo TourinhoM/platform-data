@@ -1,6 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
+  - serviceaccount-appdatabase-seeder.yaml
   - job-create-grafana-db.yaml
   - job-create-dtrack-db.yaml
   - job-create-backstage-db.yaml
